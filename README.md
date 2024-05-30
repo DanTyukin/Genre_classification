@@ -15,7 +15,8 @@
 ```bash
 cd server
 pip install -r requirements.txt
-python app.py ```
+python app.py
+``` bash
 
 ##### Запуск клиента
 Затем запустите клиента:
