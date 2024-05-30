@@ -16,8 +16,10 @@
 cd server
 pip install -r requirements.txt
 python app.py
-bash
-Копировать код
+
+Запуск клиента
+Затем запустите клиента:
+
 cd ../client
+pip install -r requirements.txt
 python client.py
-Теперь вы можете загружать аудиофайлы через клиент и получать предсказания жанра музыки от сервера.
