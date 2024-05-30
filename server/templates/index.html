@@ -185,8 +185,17 @@
         });
 
         form.addEventListener('submit', function(event) {
-            loading.style.display = 'block';
-        });
+        const file = fileInput.files[0];
+        const validExtensions = ['mp3', 'wav'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!validExtensions.includes(fileExtension)) {
+            event.preventDefault(); // Предотвращаем отправку формы
+            alert('Invalid file format. Please select an mp3 or wav file.');
+        } else {
+            loading.style.display = 'block'; // Показываем индикатор загрузки
+        }
+    });
 
         function visualizeAudio(url) {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
