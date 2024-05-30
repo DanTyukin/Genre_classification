@@ -12,11 +12,11 @@
 
 Сначала запустите сервер:
 
-```bash
+```
 cd server
 pip install -r requirements.txt
 python app.py
-``` bash
+```
 
 ##### Запуск клиента
 Затем запустите клиента:
