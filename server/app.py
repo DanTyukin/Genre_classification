@@ -7,14 +7,12 @@ from utils.feature_extraction import extract_features
 
 app = Flask(__name__)
 
-# Загрузка модели и скейлера
 with open('model/xgb_mgen.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
 with open('model/min_max_scaler.pkl', 'rb') as scaler_file:
     min_max_scaler = pickle.load(scaler_file)
 
-# Ensure the upload directory exists
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -42,7 +40,6 @@ def predict():
         prediction = model.predict(features)
         genre = style[prediction[0]]
 
-        # Редирект на маршрут /result с параметром genre
         return redirect(url_for('result', genre=genre))
     else:
         return jsonify({'error': 'File not processed'}), 400
