@@ -19,7 +19,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Убираем ползунок по горизонтали */
+            overflow-x: hidden;
         }
         .container {
             position: relative;
@@ -42,11 +42,11 @@
         }
         h1 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         p {
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .upload-btn {
             padding: 10px 20px;
@@ -59,6 +59,8 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
+            margin-bottom: 10px;
+            margin-top: 10px;
         }
         .upload-btn:hover {
             background-color: #0056b3;
@@ -67,25 +69,19 @@
         .upload-btn:active {
             transform: scale(0.95);
         }
-        /* Убираем стандартный стиль для input[type="file"] */
         input[type="file"] {
             display: none;
         }
-        /* Стили для отображения имени выбранного файла */
         #file-name {
             font-size: 14px;
             margin-top: 10px;
+            margin-bottom: 10px;
             color: #ddd;
         }
         #loading {
             display: none;
             color: #fff;
             font-size: 18px;
-        }
-        #drop-zone {
-            border: 2px dashed #007bff;
-            padding: 20px;
-            margin-top: 20px;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -94,6 +90,15 @@
         .result-animation {
             animation: fadeIn 1s;
         }
+        #audio-player {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+        #visualizer {
+    display: block;
+    margin: 0 auto;
+}
     </style>
 </head>
 <body>
@@ -151,8 +156,8 @@
     <div class="container">
         <div class="result-container">
             <h1>Upload an audio file to classify its genre</h1>
+            <p class="file-format">Supported file formats: MP3, WAV</p>
             <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data">
-                <!-- Используем обычную кнопку для открытия диалогового окна выбора файла -->
                 <label class="upload-btn" for="file-input">Choose File</label>
                 <input id="file-input" type="file" name="file" accept="audio/*">
                 <div id="file-name"></div>
@@ -161,6 +166,11 @@
             <div id="loading">Loading...</div>
             <audio id="audio-player" controls style="display:none;"></audio>
             <canvas id="visualizer" width="600" height="200" style="display:none;"></canvas>
+            <p class="genre-info">
+            Track should match one of the following styles: Blues, Classical, Country, Pop, Disco, Hip-Hop, Jazz, Metal, Reggae, Rock.
+            If the uploaded track's style is not in the list above, the application will output the style most similar to the style of the track
+            based on its temporal and frequency characteristics.
+        </p>
         </div>
     </div>
     <script>
@@ -185,17 +195,20 @@
         });
 
         form.addEventListener('submit', function(event) {
-        const file = fileInput.files[0];
-        const validExtensions = ['mp3', 'wav'];
-        const fileExtension = file.name.split('.').pop().toLowerCase();
+    const file = fileInput.files[0];
+    const validExtensions = ['mp3', 'wav'];
+    const fileExtension = file ? file.name.split('.').pop().toLowerCase() : '';
 
-        if (!validExtensions.includes(fileExtension)) {
-            event.preventDefault(); // Предотвращаем отправку формы
-            alert('Invalid file format. Please select an mp3 or wav file.');
-        } else {
-            loading.style.display = 'block'; // Показываем индикатор загрузки
-        }
-    });
+    if (!file) {
+        event.preventDefault();
+        alert('No selected file');
+    } else if (!validExtensions.includes(fileExtension)) {
+        event.preventDefault();
+        alert('Invalid file format. Please select an mp3 or wav file.');
+    } else {
+        loading.style.display = 'block';
+    }
+});
 
         function visualizeAudio(url) {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -228,3 +241,5 @@
     </script>
 </body>
 </html>
+
+
