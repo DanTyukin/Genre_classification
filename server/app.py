@@ -1,8 +1,6 @@
 import os
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import pickle
-import numpy as np
-import librosa
 from utils.feature_extraction import extract_features
 
 app = Flask(__name__)
