@@ -5,18 +5,31 @@ from utils.feature_extraction import extract_features
 
 app = Flask(__name__)
 
-with open('model/xgb_mgen.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
-
-with open('model/min_max_scaler.pkl', 'rb') as scaler_file:
-    min_max_scaler = pickle.load(scaler_file)
-
+# Constants
 UPLOAD_FOLDER = 'uploads'
+STYLE = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+
+# Configuration
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-style = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+# Initialization
+def initialize_model():
+    with open('model/xgb_mgen.pkl', 'rb') as model_file:
+        model = pickle.load(model_file)
+    with open('model/min_max_scaler.pkl', 'rb') as scaler_file:
+        min_max_scaler = pickle.load(scaler_file)
+    return model, min_max_scaler
 
+model, min_max_scaler = initialize_model()
+
+# Utility function for prediction
+def predict_genre(features):
+    prediction = model.predict(features)
+    genre = STYLE[prediction[0]]
+    return genre
+
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -35,8 +48,7 @@ def predict():
         file.save(file_path)
 
         features = extract_features(file_path, min_max_scaler)
-        prediction = model.predict(features)
-        genre = style[prediction[0]]
+        genre = predict_genre(features)
 
         return redirect(url_for('result', genre=genre))
     else:
@@ -49,3 +61,4 @@ def result():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
